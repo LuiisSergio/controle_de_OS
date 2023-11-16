@@ -36,3 +36,6 @@ def main_menu(database):
 			break
 		else:
 			print("Opção inválida! Tente novamente.")
+
+database = load_database()
+main_menu(database)
