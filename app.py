@@ -88,6 +88,25 @@ def delete_machine(database, machine_id):
 		return True
 	return False
 
+def view_state_machines(database):
+	if not database['machine']:
+		print("Ainda não há maquinas no banco de dados")
+		return
+	print("\nEstado Atual das Máquinas:")
+	for machine_id, machine in database['machine'].items():
+		state = machine['state']
+		state_detail = ""
+
+		# revisar quando partes estiver pronta
+		if state == "Em operação":
+			for os_id, os in database['ordens_servico'].items():
+				for item_id, item in os['itens'].items():
+					for part_id, part in item['partes'].items():
+						if part['machine'] == machine_id and part['status'] in ['Começou', 'Em progresso']:
+							state_detail = f" => Trabalhando na OS {os_id} => Parte {part_id}"
+							break
+		
+		print(f"Maquina {machine_id}: {machine['name']} - Estado: {state}{state_detail}")
 
 
 database = load_database()
